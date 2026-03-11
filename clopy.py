@@ -21,7 +21,13 @@ external requirements:
 optipng (can install via winget)
 """
 # Fuckery begin:
-
+os.chdir(os.environ['APPDATA'])
+try:
+    os.mkdir('clopy')
+except Exception:
+    print("Folder exists")
+os.chdir(os.environ['APPDATA']+"\\clopy\\")
+print(os.getcwd())
 stop_thread = False
 stop_clipboard_thread = False
 current_clipboard_data = "a"
@@ -75,10 +81,18 @@ def clipboard_monitor():
                 print("Clipboard data is not a png.")
                 close_clipboard()
 
+def cleanup_files():
+    folder_path = os.getcwd()
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
 # Exit application
 def exit_icon():
     global stop_thread
     global stop_clipboard_thread
+    cleanup_files()
     stop_clipboard_thread = True
     stop_thread = True
 
